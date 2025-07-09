@@ -2,7 +2,9 @@ import asyncio
 import json
 import logging
 import os
+from exceptions import *
 from datetime import datetime
+from utils import *
 
 import aiofiles
 from playwright.async_api import Browser
@@ -33,7 +35,12 @@ class Website:
             "run_time": "",
             "message": "",
         }
-        self.logger = None
+        
+        try:
+            self.logger = setup_logger(name=f"{self.site_name}_logger", log_file=f"{self.case_number}_{self.site_name}.log", level=logging.DEBUG)
+        except Exception as e:
+            raise RuntimeError(f"Failed to set up logger for {self.site_name}. Error: {str(e)}")
+        
 
     async def async_init(self, browser):
         """Initialize Playwright browser context"""
